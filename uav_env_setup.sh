@@ -278,6 +278,51 @@ install_livox_sdk() {
     cd "$HOME"
 }
 
+install_qpoases() {
+    log_info "安装qpOASES..."
+    if [ -f /usr/local/lib/libqpOASES.so ] || [ -f /usr/local/include/qpOASES.hpp ]; then
+        log_success "检测到qpOASES已安装，跳过安装"
+        return 0
+    fi
+    local qpoases_dir="$HOME/qpOASES"
+    if [ -d "$qpoases_dir" ]; then
+        log_warning "qpOASES目录已存在，跳过克隆"
+    else
+        git clone https://github.com/coin-or/qpOASES.git "$qpoases_dir"
+    fi
+    cd "$qpoases_dir"
+    mkdir -p build && cd build
+    cmake ..
+    make -j$(nproc)
+    sudo make install
+    cd "$HOME"
+    log_success "qpOASES安装完成"
+}
+
+install_librealsense() {
+    log_info "安装librealsense..."
+    if [ -f /usr/local/lib/librealsense2.so ] || [ -d /usr/local/include/librealsense2 ]; then
+        log_success "检测到librealsense已安装，跳过安装"
+        return 0
+    fi
+    local realsense_dir="$HOME/librealsense"
+    if [ -d "$realsense_dir" ]; then
+        log_warning "librealsense目录已存在，跳过克隆"
+    else
+        git clone https://github.com/IntelRealSense/librealsense.git "$realsense_dir"
+    fi
+    cd "$realsense_dir"
+    mkdir -p build && cd build
+    cmake .. -DCMAKE_BUILD_TYPE=Release
+    make -j$(nproc)
+    sudo make install
+    # 安装udev规则
+    sudo cp ../config/99-realsense-libusb.rules /etc/udev/rules.d/
+    sudo udevadm control --reload-rules && sudo udevadm trigger
+    cd "$HOME"
+    log_success "librealsense安装完成"
+}
+
 # =============================================================================
 # 验证和测试函数
 # =============================================================================
@@ -411,6 +456,8 @@ main() {
     install_ros_packages
     install_mavros
     install_livox_sdk
+    install_qpoases
+    install_librealsense
     verify_installation
     test_ros_environment
     
