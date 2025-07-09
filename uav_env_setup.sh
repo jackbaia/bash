@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =============================================================================
-# UAV环境自动化搭建脚本 - 简化版
+# UAV环境自动化搭建脚本 - 基础版
 # 适用于Ubuntu 20.04 LTS + ROS Noetic
 # =============================================================================
 
@@ -9,7 +9,7 @@ set -e
 
 # 配置常量
 readonly SCRIPT_NAME="UAV环境自动化搭建脚本"
-readonly SCRIPT_VERSION="3.0"
+readonly SCRIPT_VERSION="1.0"
 readonly SUPPORTED_OS="Ubuntu"
 readonly SUPPORTED_VERSION="20.04"
 
