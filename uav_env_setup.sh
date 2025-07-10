@@ -28,7 +28,7 @@ readonly BASE_PACKAGES=(
     "python3-rosdep" "python3-rosinstall" "python3-rosinstall-generator"
     "python3-wstool" "net-tools" "openssh-server" "ant" "default-jdk"
     "libeigen3-dev" "libboost-all-dev" "libopencv-dev" "libpcl-dev" "libyaml-cpp-dev"
-    "libgoogle-glog-dev" "code"
+    "libgoogle-glog-dev"
 )
 
 readonly ROS_PACKAGES=(
