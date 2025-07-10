@@ -158,7 +158,7 @@ confirm_installation() {
     echo ""
     echo "安装内容:"
     echo "  - ROS Noetic 环境检查（需要手动安装）"
-    echo "  - 开发工具 (git, vim, terminator等)"
+    echo "  - 开发工具 (git, vim, terminator, vscode等)"
     echo "  - ROS工具包 (rviz, gazebo, plotjuggler等)"
     echo "  - MAVROS"
     echo "  - Livox SDK2"
@@ -276,6 +276,23 @@ install_livox_sdk() {
     fi
     
     cd "$HOME"
+}
+
+install_vscode() {
+    log_info "安装VS Code..."
+    # 安装依赖
+    sudo apt update
+    sudo apt install -y software-properties-common apt-transport-https wget gpg
+    # 导入微软GPG密钥（新方法，避免apt-key警告）
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/microsoft.gpg
+    sudo install -o root -g root -m 644 /tmp/microsoft.gpg /usr/share/keyrings/vscode.gpg
+    rm /tmp/microsoft.gpg
+    # 添加VS Code仓库
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/vscode.gpg] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
+    # 安装VS Code
+    sudo apt update
+    sudo apt install -y code
+    log_success "VS Code安装完成"
 }
 
 install_qpoases() {
@@ -453,6 +470,7 @@ main() {
     update_system
     check_ros_installation
     install_dependencies
+    install_vscode
     install_ros_packages
     install_mavros
     install_livox_sdk
